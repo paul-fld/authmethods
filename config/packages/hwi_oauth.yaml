@@ -1,5 +1,6 @@
 hwi_oauth:
-    # https://github.com/hwi/HWIOAuthBundle/blob/master/docs/2-configuring_resource_owners.md
+    firewall_names: [main]
+
     resource_owners:
         facebook:
             type:                facebook
@@ -7,11 +8,8 @@ hwi_oauth:
             client_secret:       '%env(FB_SECRET)%'
             scope:               "email public_profile"
 
-hwi_oauth:
-    firewall_names: [main]
-    resource_owners:
         github:
             type:                github
-            client_id:          '%env(GITHUB_CLIENT_ID)%'
-            client_secret:      '%env(GITHUB_CLIENT_SECRET)%'
-            scope:              "user:email"
+            client_id:           '%env(GITHUB_CLIENT_ID)%'
+            client_secret:       '%env(GITHUB_CLIENT_SECRET)%'
+            scope:               "user:email"
