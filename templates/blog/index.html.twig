@@ -3,14 +3,35 @@
 {% block body_id 'blog_index' %}
 
 {% block main %}
+    {% if weather %}
+        <div class="card mb-4 shadow-sm border-0 bg-light">
+            <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                    <h5 class="card-title mb-1">
+                        Météo à <strong>{{ weather.name }}</strong>
+                    </h5>
+                    <p class="card-text mb-0 text-muted">
+                        {{ weather.weather[0].description|capitalize }}<br>
+                        <strong>{{ weather.main.temp|round }}°C</strong>
+                    </p>
+                </div>
+                <div>
+                    <img src="https://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@2x.png"
+                         alt="{{ weather.weather[0].description }}" width="80" height="80">
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
     {% for post in paginator.results %}
         {{ include('blog/_post.html.twig') }}
     {% else %}
         <div class="jumbotron">{{ 'post.no_posts_found'|trans }}</div>
     {% endfor %}
 
-    {% if paginator.hasToPaginate %}
 
+    {% if paginator.hasToPaginate %}
         <div class="navigation text-center">
             <ul class="pagination pagination-lg">
                 {% if paginator.hasPreviousPage %}
@@ -31,7 +52,9 @@
                             <span class="page-link">{{ i }} <span class="sr-only">{{ 'paginator.current'|trans }}</span></span>
                         </li>
                     {% else %}
-                        <li class="page-item"><a class="page-link" href="{{ path('blog_index_paginated', {page: i, tag: tagName}) }}">{{ i }}</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ path('blog_index_paginated', {page: i, tag: tagName}) }}">{{ i }}</a>
+                        </li>
                     {% endif %}
                 {% endfor %}
 
@@ -53,7 +76,6 @@
 
 {% block sidebar %}
     {{ parent() }}
-
     {{ show_source_code(_self) }}
     {{ include('blog/_rss.html.twig') }}
 {% endblock %}
