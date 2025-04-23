@@ -1,8 +1,3 @@
-{#
-   This is the base template used as the application layout which contains the
-   common elements and decorates all the other templates.
-   See https://symfony.com/doc/current/templates.html#template-inheritance-and-layouts
-#}
 <!DOCTYPE html>
 <html lang="{{ app.locale }}">
     <head>
@@ -12,10 +7,12 @@
         <title>{% block title %}Symfony Demo application{% endblock %}</title>
         <link rel="alternate" type="application/rss+xml" title="{{ 'rss.title'|trans }}" href="{{ path('blog_rss') }}">
 
-        {#
-            Those two blocks defines frontend entrypoint for CSS and JavaScript assets
-            See https://symfony.com/doc/current/frontend.html
-        #}
+        {# Bootstrap Icons (pour les icônes modernes) #}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+        {# Optionnel : Bootstrap CSS si non inclus ailleurs #}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
         {% block stylesheets %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
@@ -33,47 +30,51 @@
                         <a class="navbar-brand" href="{{ path('homepage') }}">
                             Symfony Demo
                         </a>
-                        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#appNavbar" aria-controls="appNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#appNavbar" aria-controls="appNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
                         </button>
 
-                        <div class="navbar-collapse collapse" id="appNavbar">
-                            <ul class="navbar-nav ml-auto">
+                        <div class="collapse navbar-collapse" id="appNavbar">
+                            <ul class="navbar-nav ms-auto">
                                 {% block header_navigation_links %}
                                     <li class="nav-item{{ _route == 'blog_index' ? ' active' : '' }}">
                                         <a class="nav-link" href="{{ path('blog_index') }}">
-                                            <twig:ux:icon name="tabler:home"/> {{ 'menu.homepage'|trans }}
+                                            <i class="bi bi-house-door"></i> Accueil
                                         </a>
                                     </li>
                                     {% if is_granted('ROLE_ADMIN') %}
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ path('admin_post_index') }}">
-                                                <twig:ux:icon name="tabler:lock"/> {{ 'menu.admin'|trans }}
+                                                <i class="bi bi-shield-lock"></i> Admin
                                             </a>
                                         </li>
                                     {% endif %}
                                 {% endblock %}
 
                                 <li class="nav-item{{ _route == 'blog_search' ? ' active' : '' }}">
-                                    <a class="nav-link" href="{{ path('blog_search') }}"> <twig:ux:icon name="tabler:search"/> {{ 'menu.search'|trans }}</a>
+                                    <a class="nav-link" href="{{ path('blog_search') }}">
+                                        <i class="bi bi-search"></i> Rechercher
+                                    </a>
                                 </li>
 
                                 {% if app.user %}
                                     <li class="nav-item dropdown">
-                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="user">
-                                            <twig:ux:icon name="tabler:user"/>
-                                            <span class="caret"></span>
-                                            <span class="sr-only">{{ app.user.fullname }}</span>
+                                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                                            <i class="bi bi-person-circle"></i> {{ app.user.fullname|default(app.user.username) }}
                                         </a>
-                                        <div class="dropdown-menu user" role="menu" aria-labelledby="user">
-                                            <a class="dropdown-item" href="{{ path('user_edit') }}">
-                                                <twig:ux:icon name="tabler:id-badge-2"/> {{ 'menu.user'|trans }}
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="{{ logout_path() }}">
-                                                <twig:ux:icon name="tabler:logout"/> {{ 'menu.logout'|trans }}
-                                            </a>
-                                        </div>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ path('user_edit') }}">
+                                                    <i class="bi bi-person-lines-fill"></i> Mon profil
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <a class="dropdown-item" href="{{ logout_path() }}">
+                                                    <i class="bi bi-box-arrow-right"></i> Déconnexion
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </li>
                                 {% endif %}
 
@@ -88,12 +89,11 @@
             </header>
         {% endblock %}
 
-        <div class="container body-container">
+        <div class="container body-container mt-5 pt-4">
             {% block body %}
                 <div class="row">
                     <div id="main" class="col-sm-9">
                         {{ include('default/_flash_messages.html.twig') }}
-
                         {% block main %}{% endblock %}
                     </div>
 
@@ -111,31 +111,25 @@
         </div>
 
         {% block footer %}
-            <footer>
-                <div class="container">
-                    <div class="row">
-                        <div id="footer-copyright" class="col-md-6">
-                            <p>&copy; {{ 'now'|date('Y') }} - The Symfony Project</p>
-                            <p>{{ 'mit_license'|trans }}</p>
-                        </div>
-                        <div id="footer-resources" class="col-md-6">
-                            <p>
-                                <a rel="noopener noreferrer" target="_blank" href="https://twitter.com/symfony" title="Symfony on X (formerly Twitter)">
-                                    <twig:ux:icon name="tabler:brand-x" font-size="28px" /> <span class="sr-only">X/Twitter</span>
-                                </a>
-                                <a target="_blank" href="https://symfony.com/blog/" title="Symfony Blog">
-                                    <twig:ux:icon name="tabler:rss" font-size="28px" /> <span class="sr-only">RSS feed</span>
-                                </a>
-                            </p>
-                        </div>
+            <footer class="bg-light text-muted mt-5 py-4">
+                <div class="container d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <p class="mb-0">&copy; {{ 'now'|date('Y') }} - The Symfony Project</p>
+                        <small>Licence MIT</small>
+                    </div>
+                    <div>
+                        <a target="_blank" href="https://twitter.com/symfony" class="text-decoration-none me-3">
+                            <i class="bi bi-twitter-x fs-4"></i>
+                        </a>
+                        <a target="_blank" href="https://symfony.com/blog/" class="text-decoration-none">
+                            <i class="bi bi-rss fs-4"></i>
+                        </a>
                     </div>
                 </div>
             </footer>
         {% endblock %}
 
-        {# it's not mandatory to set the timezone in localizeddate(). This is done to
-           avoid errors when the 'intl' PHP extension is not available and the application
-           is forced to use the limited "intl polyfill", which only supports UTC and GMT #}
         <!-- Page rendered on {{ 'now'|format_datetime('long', 'long', '', 'UTC') }} -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

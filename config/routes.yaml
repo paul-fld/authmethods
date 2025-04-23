@@ -1,13 +1,10 @@
-# These lines define a route using YAML configuration. The controller used by
-# the route (FrameworkBundle:Template:template) is a convenient shortcut when
-# the template can be rendered without executing any logic in your own controller.
-# See https://symfony.com/doc/current/templates.html#rendering-a-template-directly-from-a-route
 homepage:
     path: /{_locale}
     controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
     defaults:
         template: default/homepage.html.twig
         _locale: '%app.locale%'
+
 
 controllers:
     resource:
@@ -17,3 +14,15 @@ controllers:
     prefix: /{_locale}
     defaults:
         _locale: '%app.locale%'
+
+hwi_oauth_redirect:
+    path: /login/check-google
+    controller: HWI\Bundle\OAuthBundle\Controller\ConnectController::connectAction
+
+hwi_oauth_login:
+    path: /login
+    controller: HWI\Bundle\OAuthBundle\Controller\ConnectController::connectAction
+
+
+app_logout:
+    path: /logout

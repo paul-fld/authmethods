@@ -14,13 +14,15 @@
         "symfony/polyfill-php82": "*"
     },
     "require": {
-        "php": ">=8.2",
+        "php": "^8.2 || ^8.4",
         "ext-pdo_sqlite": "*",
         "doctrine/dbal": "^4.0",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.0",
+        "hwi/oauth-bundle": "*",
         "league/commonmark": "^2.1",
+        "league/oauth2-google": "^4.0",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "^7",
         "symfony/asset-mapper": "^7",
@@ -72,7 +74,7 @@
             "symfony/runtime": true
         },
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.6"
         },
         "preferred-install": {
             "*": "dist"
